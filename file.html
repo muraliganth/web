@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Order App</title>
+
+  <!-- CSS -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial;
+    }
+
+    body {
+      background: #0f0f0f;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .login-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: orange;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: red;
+      color: white;
+    }
+
+    .food {
+      background: #1a1a1a;
+      margin: 15px 0;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    #cart {
+      margin-top: 30px;
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    ul {
+      list-style: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div class="login-box">
+    <h2>🔐 Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+    <h3 id="welcome"></h3>
+  </div>
+
+  <!-- MENU -->
+  <h1>🍔 Food Menu</h1>
+
+  <div class="food">
+    <h3>🍕 Pizza</h3>
+    <p>₹200</p>
+    <button onclick="addToCart('Pizza',200)">Add</button>
+  </div>
+
+  <div class="food">
+    <h3>🍔 Burger</h3>
+    <p>₹120</p>
+    <button onclick="addToCart('Burger',120)">Add</button>
+  </div>
+
+  <div class="food">
+    <h3>🍝 Pasta</h3>
+    <p>₹150</p>
+    <button onclick="addToCart('Pasta',150)">Add</button>
+  </div>
+
+  <!-- CART -->
+  <div id="cart">
+    <h2>🛒 Cart</h2>
+    <ul id="cartItems"></ul>
+    <h3 id="total"></h3>
+    <button onclick="placeOrder()">Place Order</button>
+  </div>
+
+</div>
+
+<!-- JS -->
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function login() {
+  let user = document.getElementById("username").value;
+  let pass = document.getElementById("password").value;
+
+  if(user && pass){
+    document.getElementById("welcome").innerText = "Welcome " + user + " 👋";
+  } else {
+    alert("Enter login details");
+  }
+}
+
+function addToCart(item, price){
+  cart.push({item, price});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  displayCart();
+}
+
+function displayCart(){
+  let list = document.getElementById("cartItems");
+  list.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((food)=>{
+    let li = document.createElement("li");
+    li.innerText = food.item + " - ₹" + food.price;
+    list.appendChild(li);
+    total += food.price;
+  });
+
+  document.getElementById("total").innerText = "Total: ₹" + total;
+}
+
+function placeOrder(){
+  if(cart.length === 0){
+    alert("Cart empty ❌");
+    return;
+  }
+
+  alert("Order placed successfully ✅");
+  cart = [];
+  localStorage.removeItem("cart");
+  displayCart();
+}
+
+displayCart();
+</script>
+
+</body>
+</html>
